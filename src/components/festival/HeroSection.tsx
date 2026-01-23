@@ -1,31 +1,60 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import festivalLogo from "@/assets/festival-logo.png";
 
 const HeroSection = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const logoY = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const bgLogoScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+  const bgLogoOpacity = useTransform(scrollYProgress, [0, 0.5], [0.06, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero bg-pattern-cultural">
-      {/* Background logo with low opacity */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <motion.img
+    <section
+      ref={ref}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero bg-pattern-cultural"
+    >
+      {/* Parallax decorative elements */}
+      <motion.div
+        className="absolute top-20 left-10 w-32 h-32 rounded-full bg-secondary/5 blur-2xl"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 80]) }}
+      />
+      <motion.div
+        className="absolute bottom-40 right-20 w-48 h-48 rounded-full bg-primary/5 blur-3xl"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, -60]) }}
+      />
+
+      {/* Background logo with parallax */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ scale: bgLogoScale, opacity: bgLogoOpacity }}
+      >
+        <img
           src={festivalLogo}
           alt=""
           aria-hidden="true"
-          className="w-[80vw] max-w-4xl opacity-[0.06]"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 0.06, scale: 1 }}
-          transition={{ duration: 1.5 }}
+          className="w-[80vw] max-w-4xl"
         />
-      </div>
+      </motion.div>
 
       <div className="container relative z-10 py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Main logo */}
+        <motion.div
+          className="max-w-4xl mx-auto text-center"
+          style={{ y: contentY }}
+        >
+          {/* Main logo with parallax */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="mb-8"
+            style={{ y: logoY }}
           >
             <img
               src={festivalLogo}
@@ -51,8 +80,8 @@ const HeroSection = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto mb-12 leading-relaxed"
           >
-            A national platform celebrating India's classical & folk arts, 
-            combined with a vibrant cultural bazaar and festival experience. 
+            A national platform celebrating India's classical & folk arts,
+            combined with a vibrant cultural bazaar and festival experience.
             Where art meets celebration, and tradition meets joy.
           </motion.p>
 
@@ -70,7 +99,7 @@ const HeroSection = () => {
               <a href="#participate">Participate as an Artist</a>
             </Button>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Scroll indicator */}
