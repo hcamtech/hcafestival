@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Utensils, Palette, Gamepad2, Tent } from "lucide-react";
@@ -28,11 +28,39 @@ const experiences = [
 
 const CelebrationSection = () => {
   const ref = useRef(null);
+  const containerRef = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const patternY = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+
   return (
-    <section id="celebration" className="py-24 md:py-32 bg-background">
-      <div className="container px-4">
+    <section
+      id="celebration"
+      ref={containerRef}
+      className="py-24 md:py-32 bg-background relative overflow-hidden"
+    >
+      {/* Parallax pattern */}
+      <motion.div
+        className="absolute inset-0 bg-pattern-rangoli"
+        style={{ y: patternY }}
+      />
+
+      {/* Decorative accents */}
+      <motion.div
+        className="absolute top-1/4 left-0 w-64 h-1 bg-gradient-to-r from-secondary/20 to-transparent"
+        style={{ x: useTransform(scrollYProgress, [0, 1], [-100, 50]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 right-0 w-48 h-1 bg-gradient-to-l from-primary/20 to-transparent"
+        style={{ x: useTransform(scrollYProgress, [0, 1], [100, -50]) }}
+      />
+
+      <div className="container px-4 relative">
         <div ref={ref} className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <motion.span
@@ -59,7 +87,7 @@ const CelebrationSection = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg text-muted-foreground max-w-2xl mx-auto"
             >
-              The festival is more than performances on a stage. It's an immersive experience 
+              The festival is more than performances on a stage. It's an immersive experience
               where culture is not just watched, but lived and enjoyed.
             </motion.p>
           </div>
@@ -71,9 +99,10 @@ const CelebrationSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
                 className="group p-8 bg-card rounded-xl border border-border/50 shadow-soft hover:shadow-elevated transition-all duration-300"
               >
-                <div className="w-14 h-14 rounded-lg bg-secondary/20 flex items-center justify-center mb-5 group-hover:bg-secondary/30 transition-colors">
+                <div className="w-14 h-14 rounded-lg bg-secondary/20 flex items-center justify-center mb-5 group-hover:bg-secondary/30 group-hover:scale-110 transition-all duration-300">
                   <exp.icon className="w-7 h-7 text-secondary" />
                 </div>
                 <h3 className="text-xl font-heading font-semibold text-foreground mb-3">

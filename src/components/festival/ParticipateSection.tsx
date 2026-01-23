@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,35 @@ const participantTypes = [
 
 const ParticipateSection = () => {
   const ref = useRef(null);
+  const containerRef = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const patternY = useTransform(scrollYProgress, [0, 1], [-20, 20]);
+
   return (
-    <section id="participate" className="py-24 md:py-32 bg-background">
-      <div className="container px-4">
+    <section
+      id="participate"
+      ref={containerRef}
+      className="py-24 md:py-32 bg-background relative overflow-hidden"
+    >
+      {/* Parallax pattern */}
+      <motion.div
+        className="absolute inset-0 bg-pattern-cultural opacity-50"
+        style={{ y: patternY }}
+      />
+
+      {/* Decorative lines */}
+      <motion.div
+        className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/20 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-30, 30]) }}
+      />
+
+      <div className="container px-4 relative">
         <div ref={ref} className="max-w-4xl mx-auto text-center">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
@@ -60,7 +84,8 @@ const ParticipateSection = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.4, delay: 0.4 + index * 0.05 }}
-                className="flex items-center gap-2 px-5 py-3 bg-muted rounded-full border border-border/50"
+                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                className="flex items-center gap-2 px-5 py-3 bg-muted rounded-full border border-border/50 cursor-default"
               >
                 <type.icon className="w-4 h-4 text-primary" />
                 <span className="text-foreground font-medium text-sm">{type.label}</span>
@@ -72,6 +97,8 @@ const ParticipateSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.6 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             <Button variant="hero" size="xl">
               Participate in the Festival

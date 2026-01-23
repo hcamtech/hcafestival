@@ -1,17 +1,57 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { Heart, Users, Star, HandHeart } from "lucide-react";
 
 const InclusivitySection = () => {
   const ref = useRef(null);
+  const containerRef = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const patternY = useTransform(scrollYProgress, [0, 1], [-40, 40]);
+  const floatY1 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const floatY2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
+
   return (
-    <section id="inclusivity" className="py-24 md:py-32 bg-primary/5 relative overflow-hidden">
-      {/* Subtle background accent */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      
+    <section
+      id="inclusivity"
+      ref={containerRef}
+      className="py-24 md:py-32 bg-primary/5 relative overflow-hidden"
+    >
+      {/* Parallax pattern */}
+      <motion.div
+        className="absolute inset-0 bg-pattern-paisley"
+        style={{ y: patternY }}
+      />
+
+      {/* Floating decorative circles */}
+      <motion.div
+        className="absolute top-20 right-10 w-32 h-32 rounded-full border-2 border-secondary/10"
+        style={{ y: floatY1, rotate: useTransform(scrollYProgress, [0, 1], [0, 90]) }}
+      />
+      <motion.div
+        className="absolute bottom-40 left-10 w-20 h-20 rounded-full bg-secondary/5"
+        style={{ y: floatY2 }}
+      />
+      <motion.div
+        className="absolute top-1/2 right-1/4 w-3 h-3 rounded-full bg-secondary/30"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 40]) }}
+      />
+
+      {/* Subtle background accent with parallax */}
+      <motion.div
+        className="absolute top-0 right-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"
+        style={{
+          y: useTransform(scrollYProgress, [0, 1], [-50, 50]),
+          x: useTransform(scrollYProgress, [0, 1], [0, 30]),
+        }}
+      />
+
       <div className="container px-4 relative">
         <div ref={ref} className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
@@ -39,7 +79,7 @@ const InclusivitySection = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-lg text-muted-foreground max-w-2xl mx-auto"
             >
-              True culture knows no barriers. Our festival welcomes every voice, 
+              True culture knows no barriers. Our festival welcomes every voice,
               every story, every tradition that makes India rich.
             </motion.p>
           </div>
@@ -49,6 +89,7 @@ const InclusivitySection = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.3 }}
+              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
               className="flex items-start gap-4 p-6 bg-background rounded-xl border border-border/50"
             >
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -64,6 +105,7 @@ const InclusivitySection = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 }}
+              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
               className="flex items-start gap-4 p-6 bg-background rounded-xl border border-border/50"
             >
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -79,6 +121,7 @@ const InclusivitySection = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.5 }}
+              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
               className="flex items-start gap-4 p-6 bg-background rounded-xl border border-border/50"
             >
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -94,6 +137,7 @@ const InclusivitySection = () => {
               initial={{ opacity: 0, x: 30 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.6 }}
+              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
               className="flex items-start gap-4 p-6 bg-background rounded-xl border border-border/50"
             >
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
@@ -111,19 +155,25 @@ const InclusivitySection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="p-8 bg-gradient-to-br from-secondary/10 to-primary/5 rounded-2xl border border-secondary/20 text-center"
+            whileHover={{ scale: 1.01, transition: { duration: 0.3 } }}
+            className="p-8 bg-gradient-to-br from-secondary/10 to-primary/5 rounded-2xl border border-secondary/20 text-center relative overflow-hidden"
           >
-            <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-6">
-              <HandHeart className="w-8 h-8 text-secondary" />
+            {/* Inner decorative pattern */}
+            <div className="absolute inset-0 bg-pattern-waves opacity-30" />
+            
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-6">
+                <HandHeart className="w-8 h-8 text-secondary" />
+              </div>
+              <h3 className="text-xl md:text-2xl font-heading font-semibold text-foreground mb-4">
+                Empowering Differently-Abled Artisans
+              </h3>
+              <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                Differently-abled artisans are provided <strong className="text-foreground">free stall spaces</strong> to
+                showcase and sell their handcrafted products. This is not charity — it is
+                recognition of their skill, creativity, and the dignity they deserve.
+              </p>
             </div>
-            <h3 className="text-xl md:text-2xl font-heading font-semibold text-foreground mb-4">
-              Empowering Differently-Abled Artisans
-            </h3>
-            <p className="text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              Differently-abled artisans are provided <strong className="text-foreground">free stall spaces</strong> to 
-              showcase and sell their handcrafted products. This is not charity — it is 
-              recognition of their skill, creativity, and the dignity they deserve.
-            </p>
           </motion.div>
         </div>
       </div>
