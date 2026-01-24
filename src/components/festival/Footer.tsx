@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Youtube, Mail } from "lucide-react";
 
 const Footer = () => {
@@ -38,29 +39,29 @@ const Footer = () => {
             className="flex flex-wrap justify-center gap-8 mb-12"
           >
             <a
-              href="#about"
+              href="/#about"
               className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               About
             </a>
             <a
-              href="#celebration"
+              href="/#celebration"
               className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               Experience
             </a>
             <a
-              href="#participate"
+              href="/#participate"
               className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               Participate
             </a>
-            <a
-              href="#contact"
+            <Link
+              to="/contact"
               className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               Contact
-            </a>
+            </Link>
           </motion.nav>
 
           {/* Social links */}
