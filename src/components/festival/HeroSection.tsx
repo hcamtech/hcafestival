@@ -13,7 +13,6 @@ const HeroSection = () => {
   const logoY = useTransform(scrollYProgress, [0, 1], [0, 150]);
   const bgLogoScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
   const bgLogoOpacity = useTransform(scrollYProgress, [0, 0.5], [0.06, 0]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   return (
     <section
@@ -44,10 +43,7 @@ const HeroSection = () => {
       </motion.div>
 
       <div className="container relative z-10 py-20 px-4">
-        <motion.div
-          className="max-w-4xl mx-auto text-center"
-          style={{ y: contentY }}
-        >
+        <div className="max-w-4xl mx-auto text-center">
           {/* Main logo with parallax */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -85,12 +81,12 @@ const HeroSection = () => {
             Where art meets celebration, and tradition meets joy.
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons - No parallax transform to keep them interactive */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-4 justify-center relative z-20"
           >
             <Button variant="hero" size="xl" asChild>
               <a href="#about">Explore the Festival</a>
@@ -99,7 +95,7 @@ const HeroSection = () => {
               <a href="#participate">Participate as an Artist</a>
             </Button>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Scroll indicator */}
