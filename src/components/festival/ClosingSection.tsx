@@ -18,6 +18,7 @@ const ClosingSection = () => {
 
   return (
     <section
+      id="closing"
       ref={containerRef}
       className="py-24 md:py-32 bg-primary/5 relative overflow-hidden"
     >
