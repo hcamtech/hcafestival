@@ -20,8 +20,9 @@ const HeroSection = () => {
 
   return (
     <section
+      id="hero"
       ref={ref}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero pt-16 md:pt-20"
     >
       {/* Layered parallax cultural patterns */}
       <motion.div

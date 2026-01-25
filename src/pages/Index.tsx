@@ -7,10 +7,12 @@ import ClosingSection from "@/components/festival/ClosingSection";
 import Footer from "@/components/festival/Footer";
 import SectionDivider from "@/components/festival/SectionDivider";
 import CornerOrnament from "@/components/festival/CornerOrnament";
+import Navigation from "@/components/festival/Navigation";
 
 const Index = () => {
   return (
     <main className="min-h-screen">
+      <Navigation />
       <HeroSection />
       
       <SectionDivider variant="lotus" />

@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Send, MapPin, Mail, Phone } from "lucide-react";
+import Navigation from "@/components/festival/Navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -109,7 +110,8 @@ const Contact = () => {
   };
 
   return (
-    <main ref={containerRef} className="min-h-screen gradient-hero relative overflow-hidden">
+    <main ref={containerRef} className="min-h-screen gradient-hero relative overflow-hidden pt-16 md:pt-20">
+      <Navigation />
       {/* Layered parallax cultural patterns */}
       <motion.div
         className="absolute inset-0 bg-pattern-cultural opacity-70"
