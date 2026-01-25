@@ -1,13 +1,48 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Youtube, Mail } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const patternY = useTransform(scrollYProgress, [0, 1], [-20, 20]);
 
   return (
-    <footer className="bg-primary text-primary-foreground py-16">
-      <div className="container px-4">
+    <footer ref={containerRef} className="bg-primary text-primary-foreground py-16 relative overflow-hidden">
+      {/* Layered parallax patterns */}
+      <motion.div
+        className="absolute inset-0 bg-pattern-lotus opacity-10"
+        style={{ y: patternY }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-cultural opacity-8"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 15]) }}
+      />
+
+      {/* Floating decorative elements */}
+      <motion.div
+        className="absolute top-10 right-[10%] w-20 h-20 rounded-full border border-primary-foreground/10"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 30]), rotate: useTransform(scrollYProgress, [0, 1], [0, 20]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 left-[8%] w-2 h-2 rounded-full bg-primary-foreground/20"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 20]) }}
+      />
+
+      {/* Decorative gradient line */}
+      <motion.div
+        className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 15]) }}
+      />
+
+      <div className="container px-4 relative z-10">
         <div className="max-w-4xl mx-auto">
           {/* Main content */}
           <div className="text-center mb-12">
