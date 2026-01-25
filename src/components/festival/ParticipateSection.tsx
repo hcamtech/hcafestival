@@ -31,16 +31,46 @@ const ParticipateSection = () => {
       ref={containerRef}
       className="py-24 md:py-32 bg-background relative overflow-hidden"
     >
-      {/* Parallax pattern */}
+      {/* Layered parallax patterns */}
       <motion.div
-        className="absolute inset-0 bg-pattern-cultural opacity-50"
+        className="absolute inset-0 bg-pattern-cultural opacity-60"
         style={{ y: patternY }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-rangoli opacity-40"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-15, 25]) }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-paisley opacity-25"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [10, -20]) }}
+      />
+
+      {/* Floating decorative elements */}
+      <motion.div
+        className="absolute top-16 right-[8%] w-28 h-28 rounded-full border border-secondary/15"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 70]), rotate: useTransform(scrollYProgress, [0, 1], [0, 40]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 left-[6%] w-20 h-20 rounded-full bg-secondary/10 blur-xl"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-15, 45]) }}
+      />
+      <motion.div
+        className="absolute top-1/3 left-[10%] w-3 h-3 rounded-full bg-secondary/40"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 50]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 right-[12%] w-2 h-2 rounded-full bg-primary/30"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [10, -25]) }}
       />
 
       {/* Decorative lines */}
       <motion.div
         className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/20 to-transparent"
         style={{ y: useTransform(scrollYProgress, [0, 1], [-30, 30]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [20, -20]) }}
       />
 
       <div className="container px-4 relative">

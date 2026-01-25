@@ -14,11 +14,29 @@ const HeroSection = () => {
   const bgLogoScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
   const bgLogoOpacity = useTransform(scrollYProgress, [0, 0.5], [0.06, 0]);
 
+  const patternY = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const lotusY = useTransform(scrollYProgress, [0, 1], [-30, 80]);
+  const paisleyY = useTransform(scrollYProgress, [0, 1], [20, -50]);
+
   return (
     <section
       ref={ref}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero bg-pattern-cultural"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero"
     >
+      {/* Layered parallax cultural patterns */}
+      <motion.div
+        className="absolute inset-0 bg-pattern-cultural opacity-70"
+        style={{ y: patternY }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-lotus opacity-40"
+        style={{ y: lotusY }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-paisley opacity-30"
+        style={{ y: paisleyY }}
+      />
+
       {/* Parallax decorative elements */}
       <motion.div
         className="absolute top-20 left-10 w-32 h-32 rounded-full bg-secondary/5 blur-2xl"
@@ -27,6 +45,24 @@ const HeroSection = () => {
       <motion.div
         className="absolute bottom-40 right-20 w-48 h-48 rounded-full bg-primary/5 blur-3xl"
         style={{ y: useTransform(scrollYProgress, [0, 1], [0, -60]) }}
+      />
+      <motion.div
+        className="absolute top-1/3 right-[10%] w-24 h-24 rounded-full border border-secondary/15"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 100]), rotate: useTransform(scrollYProgress, [0, 1], [0, 45]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 left-[8%] w-3 h-3 rounded-full bg-secondary/40"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 70]) }}
+      />
+
+      {/* Decorative gradient lines */}
+      <motion.div
+        className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/15 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 60]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, -40]) }}
       />
 
       {/* Background logo with parallax */}

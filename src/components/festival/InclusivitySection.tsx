@@ -23,10 +23,18 @@ const InclusivitySection = () => {
       ref={containerRef}
       className="py-24 md:py-32 bg-primary/5 relative overflow-hidden"
     >
-      {/* Parallax pattern */}
+      {/* Layered parallax patterns */}
       <motion.div
-        className="absolute inset-0 bg-pattern-paisley"
+        className="absolute inset-0 bg-pattern-paisley opacity-50"
         style={{ y: patternY }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-lotus opacity-35"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-25, 35]) }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-cultural opacity-25"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [15, -20]) }}
       />
 
       {/* Floating decorative circles */}
@@ -42,6 +50,14 @@ const InclusivitySection = () => {
         className="absolute top-1/2 right-1/4 w-3 h-3 rounded-full bg-secondary/30"
         style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 40]) }}
       />
+      <motion.div
+        className="absolute top-1/3 left-[6%] w-24 h-24 rounded-full bg-primary/5 blur-xl"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [10, -35]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-[8%] w-2 h-2 rounded-full bg-primary/40"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 30]) }}
+      />
 
       {/* Subtle background accent with parallax */}
       <motion.div
@@ -50,6 +66,16 @@ const InclusivitySection = () => {
           y: useTransform(scrollYProgress, [0, 1], [-50, 50]),
           x: useTransform(scrollYProgress, [0, 1], [0, 30]),
         }}
+      />
+
+      {/* Decorative gradient lines */}
+      <motion.div
+        className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/15 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-15, 25]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [15, -20]) }}
       />
 
       <div className="container px-4 relative">

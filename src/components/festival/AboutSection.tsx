@@ -21,10 +21,18 @@ const AboutSection = () => {
       ref={containerRef}
       className="py-24 md:py-32 bg-muted/30 relative overflow-hidden"
     >
-      {/* Parallax pattern background */}
+      {/* Layered parallax pattern backgrounds */}
       <motion.div
         className="absolute inset-0 bg-pattern-lotus opacity-60"
         style={{ y: patternY }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-cultural opacity-40"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-30, 30]) }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-paisley opacity-25"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [20, -20]) }}
       />
 
       {/* Floating decorative elements */}
@@ -35,6 +43,20 @@ const AboutSection = () => {
       <motion.div
         className="absolute bottom-32 left-16 w-16 h-16 rounded-full bg-secondary/10"
         style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 40]) }}
+      />
+      <motion.div
+        className="absolute top-1/3 left-[8%] w-20 h-20 rounded-full bg-primary/5 blur-xl"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [10, -30]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-[12%] w-3 h-3 rounded-full bg-secondary/40"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 30]) }}
+      />
+
+      {/* Decorative gradient lines */}
+      <motion.div
+        className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/15 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-15, 25]) }}
       />
 
       <div className="container px-4 relative">
