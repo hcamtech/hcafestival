@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -55,6 +55,17 @@ type ContactFormData = z.infer<typeof contactSchema>;
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  const patternY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const lotusY = useTransform(scrollYProgress, [0, 1], [-30, 50]);
+  const decorY1 = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const decorY2 = useTransform(scrollYProgress, [0, 1], [0, -60]);
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
@@ -98,7 +109,53 @@ const Contact = () => {
   };
 
   return (
-    <main className="min-h-screen gradient-hero bg-pattern-cultural relative overflow-hidden">
+    <main ref={containerRef} className="min-h-screen gradient-hero relative overflow-hidden">
+      {/* Layered parallax cultural patterns */}
+      <motion.div
+        className="absolute inset-0 bg-pattern-cultural opacity-70"
+        style={{ y: patternY }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-lotus opacity-40"
+        style={{ y: lotusY }}
+      />
+      <motion.div
+        className="absolute inset-0 bg-pattern-paisley opacity-30"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [20, -40]) }}
+      />
+
+      {/* Floating decorative elements */}
+      <motion.div
+        className="absolute top-20 right-[10%] w-32 h-32 rounded-full border border-secondary/20"
+        style={{ y: decorY1, rotate: useTransform(scrollYProgress, [0, 1], [0, 45]) }}
+      />
+      <motion.div
+        className="absolute top-1/3 left-[5%] w-24 h-24 rounded-full bg-secondary/10 blur-xl"
+        style={{ y: decorY2 }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-[15%] w-16 h-16 rounded-full bg-primary/10 blur-lg"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 40]) }}
+      />
+      <motion.div
+        className="absolute top-1/2 left-[8%] w-3 h-3 rounded-full bg-secondary/50"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 60]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 right-[8%] w-2 h-2 rounded-full bg-primary/40"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [10, -30]) }}
+      />
+
+      {/* Decorative lines */}
+      <motion.div
+        className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/15 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 40]) }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent"
+        style={{ y: useTransform(scrollYProgress, [0, 1], [20, -30]) }}
+      />
+
       <CornerOrnament position="top-left" variant="floral" />
       <CornerOrnament position="top-right" variant="floral" />
       <CornerOrnament position="bottom-left" variant="paisley" />
