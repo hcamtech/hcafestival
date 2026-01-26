@@ -11,6 +11,7 @@ const navLinks = [
   { href: "#celebration", label: "Celebration" },
   { href: "#inclusivity", label: "Inclusivity" },
   { href: "#participate", label: "Participate" },
+  { href: "/register", label: "Register", isRoute: true },
   { href: "/contact", label: "Contact", isRoute: true },
 ];
 

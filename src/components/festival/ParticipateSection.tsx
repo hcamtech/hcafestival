@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Music, Mic2, Brush, Users2, GraduationCap, Sparkles } from "lucide-react";
 
@@ -130,9 +131,11 @@ const ParticipateSection = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <Button variant="hero" size="xl">
-              Participate in the Festival
-            </Button>
+            <Link to="/register">
+              <Button variant="hero" size="xl">
+                Participate in the Festival
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>
