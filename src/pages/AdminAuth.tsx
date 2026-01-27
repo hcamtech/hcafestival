@@ -15,102 +15,82 @@ const AdminAuth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (session?.user) {
-          // Check if user has admin role
-          const { data: roles } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", session.user.id)
-            .eq("role", "admin");
-
-          if (roles && roles.length > 0) {
-            navigate("/admin");
-          }
+          // Defer the role check to avoid deadlock
+          setTimeout(() => {
+            checkAdminRole(session.user.id);
+          }, 0);
         }
       }
     );
 
     // Check existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
-        const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id)
-          .eq("role", "admin");
-
-        if (roles && roles.length > 0) {
-          navigate("/admin");
-        }
+        checkAdminRole(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const checkAdminRole = async (userId: string) => {
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin");
+
+    if (roles && roles.length > 0) {
+      navigate("/admin");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      if (isSignUp) {
-        const redirectUrl = `${window.location.origin}/admin`;
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: redirectUrl,
-          },
-        });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
+      // Check if user has admin role
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id)
+        .eq("role", "admin");
+
+      if (!roles || roles.length === 0) {
+        await supabase.auth.signOut();
         toast({
-          title: "Account created",
-          description: "Please contact an administrator to grant you admin access.",
+          title: "Access Denied",
+          description: "You do not have admin privileges.",
+          variant: "destructive",
         });
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (error) throw error;
-
-        // Check if user has admin role
-        const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", data.user.id)
-          .eq("role", "admin");
-
-        if (!roles || roles.length === 0) {
-          await supabase.auth.signOut();
-          toast({
-            title: "Access Denied",
-            description: "You do not have admin privileges.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully logged in.",
-        });
-        navigate("/admin");
+        return;
       }
-    } catch (error: any) {
+
+      toast({
+        title: "Welcome back!",
+        description: "You have successfully logged in.",
+      });
+      navigate("/admin");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "An error occurred";
       toast({
         title: "Error",
-        description: error.message || "An error occurred",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -155,13 +135,9 @@ const AdminAuth = () => {
               <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                 <Lock className="w-8 h-8 text-primary" />
               </div>
-              <CardTitle className="font-display text-2xl">
-                {isSignUp ? "Create Account" : "Admin Login"}
-              </CardTitle>
+              <CardTitle className="font-display text-2xl">Admin Login</CardTitle>
               <CardDescription>
-                {isSignUp
-                  ? "Create an account to request admin access"
-                  : "Sign in to access the admin dashboard"}
+                Sign in to access the admin dashboard
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -173,7 +149,7 @@ const AdminAuth = () => {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="admin@example.com"
+                      placeholder="admin@hcafestival.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-10"
@@ -206,20 +182,8 @@ const AdminAuth = () => {
                   className="w-full"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
+                  {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
-
-                <div className="text-center">
-                  <button
-                    type="button"
-                    onClick={() => setIsSignUp(!isSignUp)}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {isSignUp
-                      ? "Already have an account? Sign in"
-                      : "Need an account? Sign up"}
-                  </button>
-                </div>
               </form>
             </CardContent>
           </Card>
