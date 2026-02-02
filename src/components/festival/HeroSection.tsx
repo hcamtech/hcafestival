@@ -1,22 +1,52 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import festivalLogo from "@/assets/festival-logo.png";
 
 const HeroSection = () => {
   const ref = useRef(null);
+  const prefersReducedMotion = useReducedMotion();
+  
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
-  const logoY = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const bgLogoScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
-  const bgLogoOpacity = useTransform(scrollYProgress, [0, 0.5], [0.06, 0]);
+  // Memoize transform values to prevent recalculation
+  const transforms = useMemo(() => ({
+    logoY: [0, prefersReducedMotion ? 0 : 150],
+    bgLogoScale: [1, prefersReducedMotion ? 1 : 1.2],
+    bgLogoOpacity: [0.06, 0],
+    patternY: [0, prefersReducedMotion ? 0 : 150],
+    lotusY: [-30, prefersReducedMotion ? -30 : 80],
+    paisleyY: [20, prefersReducedMotion ? 20 : -50],
+    decorSmall: [0, prefersReducedMotion ? 0 : 80],
+    decorLarge: [0, prefersReducedMotion ? 0 : -60],
+    decorCircle: [0, prefersReducedMotion ? 0 : 100],
+    decorDot: [0, prefersReducedMotion ? 0 : 70],
+    lineTop: [0, prefersReducedMotion ? 0 : 60],
+    lineBottom: [0, prefersReducedMotion ? 0 : -40],
+  }), [prefersReducedMotion]);
 
-  const patternY = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const lotusY = useTransform(scrollYProgress, [0, 1], [-30, 80]);
-  const paisleyY = useTransform(scrollYProgress, [0, 1], [20, -50]);
+  const logoY = useTransform(scrollYProgress, [0, 1], transforms.logoY);
+  const bgLogoScale = useTransform(scrollYProgress, [0, 1], transforms.bgLogoScale);
+  const bgLogoOpacity = useTransform(scrollYProgress, [0, 0.5], transforms.bgLogoOpacity);
+  const patternY = useTransform(scrollYProgress, [0, 1], transforms.patternY);
+  const lotusY = useTransform(scrollYProgress, [0, 1], transforms.lotusY);
+  const paisleyY = useTransform(scrollYProgress, [0, 1], transforms.paisleyY);
+  const decorSmallY = useTransform(scrollYProgress, [0, 1], transforms.decorSmall);
+  const decorLargeY = useTransform(scrollYProgress, [0, 1], transforms.decorLarge);
+  const decorCircleY = useTransform(scrollYProgress, [0, 1], transforms.decorCircle);
+  const decorDotY = useTransform(scrollYProgress, [0, 1], transforms.decorDot);
+  const lineTopY = useTransform(scrollYProgress, [0, 1], transforms.lineTop);
+  const lineBottomY = useTransform(scrollYProgress, [0, 1], transforms.lineBottom);
+  const decorCircleRotate = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 45]);
+
+  // Animation variants for reduced motion support
+  const fadeInUp = {
+    initial: { opacity: 0, y: prefersReducedMotion ? 0 : 30 },
+    animate: { opacity: 1, y: 0 },
+  };
 
   return (
     <section
@@ -24,51 +54,51 @@ const HeroSection = () => {
       ref={ref}
       className="relative min-h-screen flex items-center justify-center overflow-hidden gradient-hero pt-16 md:pt-20"
     >
-      {/* Layered parallax cultural patterns */}
+      {/* Layered parallax cultural patterns - use will-change for GPU acceleration */}
       <motion.div
-        className="absolute inset-0 bg-pattern-cultural opacity-70"
+        className="absolute inset-0 bg-pattern-cultural opacity-70 will-change-transform"
         style={{ y: patternY }}
       />
       <motion.div
-        className="absolute inset-0 bg-pattern-lotus opacity-40"
+        className="absolute inset-0 bg-pattern-lotus opacity-40 will-change-transform"
         style={{ y: lotusY }}
       />
       <motion.div
-        className="absolute inset-0 bg-pattern-paisley opacity-30"
+        className="absolute inset-0 bg-pattern-paisley opacity-30 will-change-transform"
         style={{ y: paisleyY }}
       />
 
       {/* Parallax decorative elements */}
       <motion.div
-        className="absolute top-20 left-10 w-32 h-32 rounded-full bg-secondary/5 blur-2xl"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 80]) }}
+        className="absolute top-20 left-10 w-32 h-32 rounded-full bg-secondary/5 blur-2xl will-change-transform"
+        style={{ y: decorSmallY }}
       />
       <motion.div
-        className="absolute bottom-40 right-20 w-48 h-48 rounded-full bg-primary/5 blur-3xl"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, -60]) }}
+        className="absolute bottom-40 right-20 w-48 h-48 rounded-full bg-primary/5 blur-3xl will-change-transform"
+        style={{ y: decorLargeY }}
       />
       <motion.div
-        className="absolute top-1/3 right-[10%] w-24 h-24 rounded-full border border-secondary/15"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 100]), rotate: useTransform(scrollYProgress, [0, 1], [0, 45]) }}
+        className="absolute top-1/3 right-[10%] w-24 h-24 rounded-full border border-secondary/15 will-change-transform"
+        style={{ y: decorCircleY, rotate: decorCircleRotate }}
       />
       <motion.div
-        className="absolute bottom-1/4 left-[8%] w-3 h-3 rounded-full bg-secondary/40"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 70]) }}
+        className="absolute bottom-1/4 left-[8%] w-3 h-3 rounded-full bg-secondary/40 will-change-transform"
+        style={{ y: decorDotY }}
       />
 
       {/* Decorative gradient lines */}
       <motion.div
-        className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/15 to-transparent"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 60]) }}
+        className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/15 to-transparent will-change-transform"
+        style={{ y: lineTopY }}
       />
       <motion.div
-        className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, -40]) }}
+        className="absolute bottom-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent will-change-transform"
+        style={{ y: lineBottomY }}
       />
 
       {/* Background logo with parallax */}
       <motion.div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        className="absolute inset-0 flex items-center justify-center pointer-events-none will-change-transform"
         style={{ scale: bgLogoScale, opacity: bgLogoOpacity }}
       >
         <img
@@ -76,6 +106,7 @@ const HeroSection = () => {
           alt=""
           aria-hidden="true"
           className="w-[80vw] max-w-4xl"
+          loading="eager"
         />
       </motion.div>
 
@@ -83,9 +114,8 @@ const HeroSection = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Main logo with parallax */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            {...fadeInUp}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="mb-8"
             style={{ y: logoY }}
           >
@@ -93,14 +123,15 @@ const HeroSection = () => {
               src={festivalLogo}
               alt="Hindustani Cultural Arts Festival"
               className="w-full max-w-md mx-auto"
+              loading="eager"
+              fetchPriority="high"
             />
           </motion.div>
 
           {/* Tagline */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            {...fadeInUp}
+            transition={{ duration: 0.6, delay: 0.15 }}
             className="text-xl md:text-2xl text-muted-foreground font-heading italic mb-8"
           >
             Where India's traditions come alive
@@ -108,9 +139,8 @@ const HeroSection = () => {
 
           {/* Description */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            {...fadeInUp}
+            transition={{ duration: 0.6, delay: 0.25 }}
             className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto mb-12 leading-relaxed"
           >
             A national platform celebrating India's classical & folk arts,
@@ -118,11 +148,10 @@ const HeroSection = () => {
             Where art meets celebration, and tradition meets joy.
           </motion.p>
 
-          {/* CTA Buttons - No parallax transform to keep them interactive */}
+          {/* CTA Buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            {...fadeInUp}
+            transition={{ duration: 0.6, delay: 0.35 }}
             className="flex flex-col sm:flex-row gap-4 justify-center relative z-20"
           >
             <Button variant="hero" size="xl" asChild>
@@ -135,20 +164,22 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
-      >
-        <div className="w-6 h-10 border-2 border-primary/30 rounded-full flex items-start justify-center p-2">
-          <motion.div
-            className="w-1.5 h-1.5 bg-primary/50 rounded-full"
-            animate={{ y: [0, 12, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-          />
-        </div>
-      </motion.div>
+      {/* Scroll indicator - skip animation if reduced motion */}
+      {!prefersReducedMotion && (
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+        >
+          <div className="w-6 h-10 border-2 border-primary/30 rounded-full flex items-start justify-center p-2">
+            <motion.div
+              className="w-1.5 h-1.5 bg-primary/50 rounded-full"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+            />
+          </div>
+        </motion.div>
+      )}
     </section>
   );
 };
