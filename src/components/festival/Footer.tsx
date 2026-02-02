@@ -1,45 +1,58 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useRef, forwardRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Youtube, Mail } from "lucide-react";
 
-const Footer = () => {
+const Footer = forwardRef<HTMLElement, object>((_props, _ref) => {
   const currentYear = new Date().getFullYear();
   const containerRef = useRef(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
-  const patternY = useTransform(scrollYProgress, [0, 1], [-20, 20]);
+  const transforms = useMemo(() => ({
+    patternMain: [-20, prefersReducedMotion ? -20 : 20],
+    patternSecond: [-10, prefersReducedMotion ? -10 : 15],
+    circle: [0, prefersReducedMotion ? 0 : 30],
+    dot: [-10, prefersReducedMotion ? -10 : 20],
+    line: [-10, prefersReducedMotion ? -10 : 15],
+  }), [prefersReducedMotion]);
+
+  const patternY = useTransform(scrollYProgress, [0, 1], transforms.patternMain);
+  const patternSecondY = useTransform(scrollYProgress, [0, 1], transforms.patternSecond);
 
   return (
     <footer ref={containerRef} className="bg-primary text-primary-foreground py-16 relative overflow-hidden">
       {/* Layered parallax patterns */}
       <motion.div
-        className="absolute inset-0 bg-pattern-lotus opacity-10"
+        className="absolute inset-0 bg-pattern-lotus opacity-10 will-change-transform"
         style={{ y: patternY }}
       />
       <motion.div
-        className="absolute inset-0 bg-pattern-cultural opacity-8"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 15]) }}
+        className="absolute inset-0 bg-pattern-cultural opacity-8 will-change-transform"
+        style={{ y: patternSecondY }}
       />
 
       {/* Floating decorative elements */}
       <motion.div
-        className="absolute top-10 right-[10%] w-20 h-20 rounded-full border border-primary-foreground/10"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [0, 30]), rotate: useTransform(scrollYProgress, [0, 1], [0, 20]) }}
+        className="absolute top-10 right-[10%] w-20 h-20 rounded-full border border-primary-foreground/10 will-change-transform"
+        style={{ 
+          y: useTransform(scrollYProgress, [0, 1], transforms.circle), 
+          rotate: useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : 20]) 
+        }}
       />
       <motion.div
-        className="absolute bottom-1/4 left-[8%] w-2 h-2 rounded-full bg-primary-foreground/20"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 20]) }}
+        className="absolute bottom-1/4 left-[8%] w-2 h-2 rounded-full bg-primary-foreground/20 will-change-transform"
+        style={{ y: useTransform(scrollYProgress, [0, 1], transforms.dot) }}
       />
 
       {/* Decorative gradient line */}
       <motion.div
-        className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent"
-        style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 15]) }}
+        className="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent will-change-transform"
+        style={{ y: useTransform(scrollYProgress, [0, 1], transforms.line) }}
       />
 
       <div className="container px-4 relative z-10">
@@ -47,7 +60,7 @@ const Footer = () => {
           {/* Main content */}
           <div className="text-center mb-12">
             <motion.h3
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="text-2xl md:text-3xl font-heading font-semibold mb-4"
@@ -55,7 +68,7 @@ const Footer = () => {
               Hindustani Cultural Arts Festival
             </motion.h3>
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
@@ -67,7 +80,7 @@ const Footer = () => {
 
           {/* Navigation links */}
           <motion.nav
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
@@ -101,7 +114,7 @@ const Footer = () => {
 
           {/* Social links */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
@@ -142,6 +155,8 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = "Footer";
 
 export default Footer;
