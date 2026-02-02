@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import CornerOrnament from "@/components/festival/CornerOrnament";
-import { LogOut, Users, Mail, Palette, Phone, Calendar, ExternalLink } from "lucide-react";
+import { LogOut, Users, Mail, Palette, Phone, Calendar, ExternalLink, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -113,6 +113,72 @@ const Admin = () => {
     }
   };
 
+  const exportToCSV = (data: any[], filename: string, headers: string[]) => {
+    if (data.length === 0) {
+      toast({
+        title: "No data to export",
+        description: "There are no records to export.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const csvContent = [
+      headers.join(","),
+      ...data.map((row) =>
+        headers.map((header) => {
+          const key = header.toLowerCase().replace(/ /g, "_");
+          let value = row[key];
+          if (Array.isArray(value)) {
+            value = value.join("; ");
+          }
+          if (value === null || value === undefined) {
+            value = "";
+          }
+          // Escape quotes and wrap in quotes if contains comma or newline
+          const stringValue = String(value);
+          if (stringValue.includes(",") || stringValue.includes("\n") || stringValue.includes('"')) {
+            return `"${stringValue.replace(/"/g, '""')}"`;
+          }
+          return stringValue;
+        }).join(",")
+      ),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${filename}_${new Date().toISOString().split("T")[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+
+    toast({
+      title: "Export successful",
+      description: `${data.length} records exported to ${link.download}`,
+    });
+  };
+
+  const exportContacts = () => {
+    const headers = ["created_at", "name", "email", "phone", "subject", "message"];
+    exportToCSV(contactSubmissions, "contact_submissions", headers);
+  };
+
+  const exportArtists = () => {
+    const headers = [
+      "created_at",
+      "name",
+      "email",
+      "phone",
+      "art_form",
+      "experience_level",
+      "group_name",
+      "group_size",
+      "description",
+      "portfolio_urls",
+    ];
+    exportToCSV(artistRegistrations, "artist_registrations", headers);
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -199,11 +265,22 @@ const Admin = () => {
 
             <TabsContent value="contacts">
               <Card>
-                <CardHeader>
-                  <CardTitle>Contact Submissions</CardTitle>
-                  <CardDescription>
-                    Messages received through the contact form
-                  </CardDescription>
+                <CardHeader className="flex flex-row items-start justify-between">
+                  <div>
+                    <CardTitle>Contact Submissions</CardTitle>
+                    <CardDescription>
+                      Messages received through the contact form
+                    </CardDescription>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={exportContacts}
+                    disabled={contactSubmissions.length === 0}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Export CSV
+                  </Button>
                 </CardHeader>
                 <CardContent>
                   {isLoading ? (
@@ -274,11 +351,22 @@ const Admin = () => {
 
             <TabsContent value="registrations">
               <Card>
-                <CardHeader>
-                  <CardTitle>Artist Registrations</CardTitle>
-                  <CardDescription>
-                    Applications from artists wanting to participate
-                  </CardDescription>
+                <CardHeader className="flex flex-row items-start justify-between">
+                  <div>
+                    <CardTitle>Artist Registrations</CardTitle>
+                    <CardDescription>
+                      Applications from artists wanting to participate
+                    </CardDescription>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={exportArtists}
+                    disabled={artistRegistrations.length === 0}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Export CSV
+                  </Button>
                 </CardHeader>
                 <CardContent>
                   {isLoading ? (
