@@ -58,21 +58,21 @@ const CelebrationSection = () => {
         style={{ y: useTransform(scrollYProgress, [0, 1], [15, -25]) }}
       />
 
-      {/* Floating decorative elements */}
+      {/* Floating decorative elements - responsive */}
       <motion.div
-        className="absolute top-20 left-[8%] w-28 h-28 rounded-full border border-secondary/15"
+        className="hidden md:block absolute top-20 left-[8%] w-20 md:w-28 h-20 md:h-28 rounded-full border border-secondary/15"
         style={{ y: useTransform(scrollYProgress, [0, 1], [0, 60]), rotate: useTransform(scrollYProgress, [0, 1], [0, 30]) }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-[10%] w-20 h-20 rounded-full bg-primary/5 blur-xl"
+        className="hidden sm:block absolute bottom-1/4 right-[10%] w-16 md:w-20 h-16 md:h-20 rounded-full bg-primary/5 blur-xl"
         style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 40]) }}
       />
       <motion.div
-        className="absolute top-1/3 right-[5%] w-3 h-3 rounded-full bg-secondary/40"
+        className="hidden md:block absolute top-1/3 right-[5%] w-3 h-3 rounded-full bg-secondary/40"
         style={{ y: useTransform(scrollYProgress, [0, 1], [0, 50]) }}
       />
       <motion.div
-        className="absolute bottom-1/3 left-[12%] w-2 h-2 rounded-full bg-primary/30"
+        className="hidden md:block absolute bottom-1/3 left-[12%] w-2 h-2 rounded-full bg-primary/30"
         style={{ y: useTransform(scrollYProgress, [0, 1], [10, -30]) }}
       />
 

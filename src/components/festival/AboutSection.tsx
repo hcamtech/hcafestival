@@ -60,21 +60,21 @@ const AboutSection = () => {
         style={{ y: patternPaisleyY }}
       />
 
-      {/* Floating decorative elements */}
+      {/* Floating decorative elements - responsive */}
       <motion.div
-        className="absolute top-20 right-10 w-24 h-24 rounded-full border border-secondary/20 will-change-transform"
+        className="hidden md:block absolute top-20 right-4 md:right-10 w-16 md:w-24 h-16 md:h-24 rounded-full border border-secondary/20 will-change-transform"
         style={{ y: decorY, rotate: decorRotate }}
       />
       <motion.div
-        className="absolute bottom-32 left-16 w-16 h-16 rounded-full bg-secondary/10 will-change-transform"
+        className="hidden sm:block absolute bottom-32 left-4 md:left-16 w-12 md:w-16 h-12 md:h-16 rounded-full bg-secondary/10 will-change-transform"
         style={{ y: decorBubbleY }}
       />
       <motion.div
-        className="absolute top-1/3 left-[8%] w-20 h-20 rounded-full bg-primary/5 blur-xl will-change-transform"
+        className="hidden sm:block absolute top-1/3 left-[8%] w-16 md:w-20 h-16 md:h-20 rounded-full bg-primary/5 blur-xl will-change-transform"
         style={{ y: decorBlurY }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-[12%] w-3 h-3 rounded-full bg-secondary/40 will-change-transform"
+        className="hidden md:block absolute bottom-1/4 right-[12%] w-3 h-3 rounded-full bg-secondary/40 will-change-transform"
         style={{ y: decorDotY }}
       />
 
