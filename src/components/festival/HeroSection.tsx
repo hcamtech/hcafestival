@@ -68,21 +68,21 @@ const HeroSection = () => {
         style={{ y: paisleyY }}
       />
 
-      {/* Parallax decorative elements */}
+      {/* Parallax decorative elements - hidden on mobile for cleaner layout */}
       <motion.div
-        className="absolute top-20 left-10 w-32 h-32 rounded-full bg-secondary/5 blur-2xl will-change-transform"
+        className="absolute top-20 left-4 md:left-10 w-20 md:w-32 h-20 md:h-32 rounded-full bg-secondary/5 blur-2xl will-change-transform"
         style={{ y: decorSmallY }}
       />
       <motion.div
-        className="absolute bottom-40 right-20 w-48 h-48 rounded-full bg-primary/5 blur-3xl will-change-transform"
+        className="absolute bottom-40 right-4 md:right-20 w-32 md:w-48 h-32 md:h-48 rounded-full bg-primary/5 blur-3xl will-change-transform"
         style={{ y: decorLargeY }}
       />
       <motion.div
-        className="absolute top-1/3 right-[10%] w-24 h-24 rounded-full border border-secondary/15 will-change-transform"
+        className="hidden md:block absolute top-1/3 right-[10%] w-24 h-24 rounded-full border border-secondary/15 will-change-transform"
         style={{ y: decorCircleY, rotate: decorCircleRotate }}
       />
       <motion.div
-        className="absolute bottom-1/4 left-[8%] w-3 h-3 rounded-full bg-secondary/40 will-change-transform"
+        className="hidden sm:block absolute bottom-1/4 left-[8%] w-3 h-3 rounded-full bg-secondary/40 will-change-transform"
         style={{ y: decorDotY }}
       />
 
@@ -110,19 +110,19 @@ const HeroSection = () => {
         />
       </motion.div>
 
-      <div className="container relative z-10 py-20 px-4">
+      <div className="container relative z-10 py-12 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
           {/* Main logo with parallax */}
           <motion.div
             {...fadeInUp}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="mb-8"
+            className="mb-6 sm:mb-8"
             style={{ y: logoY }}
           >
             <img
               src={festivalLogo}
               alt="Hindustani Cultural Arts Festival"
-              className="w-full max-w-md mx-auto"
+              className="w-[80%] sm:w-full max-w-xs sm:max-w-md mx-auto"
               loading="eager"
               fetchPriority="high"
             />
@@ -132,7 +132,7 @@ const HeroSection = () => {
           <motion.p
             {...fadeInUp}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-xl md:text-2xl text-muted-foreground font-heading italic mb-8"
+            className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-heading italic mb-6 sm:mb-8 px-2"
           >
             Where India's traditions come alive
           </motion.p>
@@ -141,7 +141,7 @@ const HeroSection = () => {
           <motion.p
             {...fadeInUp}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed px-2"
           >
             A national platform celebrating India's classical & folk arts,
             combined with a vibrant cultural bazaar and festival experience.
@@ -152,12 +152,12 @@ const HeroSection = () => {
           <motion.div
             {...fadeInUp}
             transition={{ duration: 0.6, delay: 0.35 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center relative z-20"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center relative z-20 px-4"
           >
-            <Button variant="hero" size="xl" asChild>
+            <Button variant="hero" size="xl" className="w-full sm:w-auto" asChild>
               <a href="#about">Explore the Festival</a>
             </Button>
-            <Button variant="hero-outline" size="xl" asChild>
+            <Button variant="hero-outline" size="xl" className="w-full sm:w-auto" asChild>
               <a href="#participate">Participate as an Artist</a>
             </Button>
           </motion.div>

@@ -130,10 +130,13 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-background text-foreground font-body antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -143,6 +146,13 @@
   /* Optimize images for smooth loading */
   img {
     content-visibility: auto;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Ensure sections don't cause horizontal overflow */
+  section {
+    max-width: 100vw;
   }
 }
 

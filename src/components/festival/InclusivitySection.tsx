@@ -37,25 +37,25 @@ const InclusivitySection = () => {
         style={{ y: useTransform(scrollYProgress, [0, 1], [15, -20]) }}
       />
 
-      {/* Floating decorative circles */}
+      {/* Floating decorative circles - responsive sizing */}
       <motion.div
-        className="absolute top-20 right-10 w-32 h-32 rounded-full border-2 border-secondary/10"
+        className="hidden md:block absolute top-20 right-4 md:right-10 w-20 md:w-32 h-20 md:h-32 rounded-full border-2 border-secondary/10"
         style={{ y: floatY1, rotate: useTransform(scrollYProgress, [0, 1], [0, 90]) }}
       />
       <motion.div
-        className="absolute bottom-40 left-10 w-20 h-20 rounded-full bg-secondary/5"
+        className="hidden sm:block absolute bottom-40 left-4 md:left-10 w-16 md:w-20 h-16 md:h-20 rounded-full bg-secondary/5"
         style={{ y: floatY2 }}
       />
       <motion.div
-        className="absolute top-1/2 right-1/4 w-3 h-3 rounded-full bg-secondary/30"
+        className="hidden md:block absolute top-1/2 right-1/4 w-3 h-3 rounded-full bg-secondary/30"
         style={{ y: useTransform(scrollYProgress, [0, 1], [-20, 40]) }}
       />
       <motion.div
-        className="absolute top-1/3 left-[6%] w-24 h-24 rounded-full bg-primary/5 blur-xl"
+        className="hidden sm:block absolute top-1/3 left-[6%] w-16 md:w-24 h-16 md:h-24 rounded-full bg-primary/5 blur-xl"
         style={{ y: useTransform(scrollYProgress, [0, 1], [10, -35]) }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-[8%] w-2 h-2 rounded-full bg-primary/40"
+        className="hidden md:block absolute bottom-1/4 right-[8%] w-2 h-2 rounded-full bg-primary/40"
         style={{ y: useTransform(scrollYProgress, [0, 1], [-10, 30]) }}
       />
 
