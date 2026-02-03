@@ -1,24 +1,26 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Menu, Home, Info, PartyPopper, Heart, Users, UserPlus, Mail } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import festivalLogo from "@/assets/festival-logo.png";
 
 const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#celebration", label: "Celebration" },
-  { href: "#inclusivity", label: "Inclusivity" },
-  { href: "#participate", label: "Participate" },
-  { href: "/register", label: "Register", isRoute: true },
-  { href: "/contact", label: "Contact", isRoute: true },
+  { href: "/", label: "Home", icon: Home, isRoute: true },
+  { href: "#about", label: "About", icon: Info },
+  { href: "#celebration", label: "Celebration", icon: PartyPopper },
+  { href: "#inclusivity", label: "Inclusivity", icon: Heart },
+  { href: "#participate", label: "Participate", icon: Users },
+  { href: "/register", label: "Register", icon: UserPlus, isRoute: true, highlight: true },
+  { href: "/contact", label: "Contact", icon: Mail, isRoute: true },
 ];
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
 
   useEffect(() => {
@@ -26,17 +28,29 @@ const Navigation = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, isRoute?: boolean) => {
+    // Close mobile menu
+    setIsOpen(false);
+
+    // Handle route links
+    if (isRoute) {
+      e.preventDefault();
+      navigate(href);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    // Handle hash links
     if (href.startsWith("#")) {
       e.preventDefault();
       
       if (!isHomePage) {
         // Navigate to home page with hash
-        window.location.href = "/" + href;
+        navigate("/" + href);
         return;
       }
       
@@ -50,10 +64,22 @@ const Navigation = () => {
           behavior: "smooth",
         });
       }
-      
-      setIsOpen(false);
     }
   };
+
+  // Handle hash navigation after page load
+  useEffect(() => {
+    if (location.hash) {
+      setTimeout(() => {
+        const targetId = location.hash.replace("#", "");
+        const element = document.getElementById(targetId);
+        if (element) {
+          const offsetTop = element.offsetTop - 80;
+          window.scrollTo({ top: offsetTop, behavior: "smooth" });
+        }
+      }, 100);
+    }
+  }, [location.hash]);
 
   return (
     <motion.header
@@ -68,7 +94,7 @@ const Navigation = () => {
     >
       <nav className="container px-4 h-16 md:h-20 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
+        <Link to="/" className="flex items-center gap-3 group" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           <motion.img
             src={festivalLogo}
             alt="Hindustani Cultural Arts Festival"
@@ -84,36 +110,31 @@ const Navigation = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-1">
           {navLinks.map((link) => (
-            link.isRoute ? (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`relative font-medium transition-colors hover:text-primary ${
-                  isScrolled ? "text-foreground" : "text-foreground"
-                } after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left`}
-              >
-                {link.label}
-              </Link>
-            ) : (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleSmoothScroll(e, link.href)}
-                className={`relative font-medium transition-colors hover:text-primary ${
-                  isScrolled ? "text-foreground" : "text-foreground"
-                } after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-[-4px] after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left`}
-              >
-                {link.label}
-              </a>
-            )
+            <Link
+              key={link.href}
+              to={link.isRoute ? link.href : "#"}
+              onClick={(e) => handleNavClick(e, link.href, link.isRoute)}
+              className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                link.highlight 
+                  ? "bg-secondary text-secondary-foreground hover:bg-secondary/90" 
+                  : `hover:text-primary hover:bg-muted/50 ${isScrolled ? "text-foreground" : "text-foreground"}`
+              } ${
+                (link.isRoute && location.pathname === link.href) || 
+                (!link.isRoute && isHomePage && location.hash === link.href)
+                  ? "text-primary"
+                  : ""
+              }`}
+            >
+              {link.label}
+            </Link>
           ))}
         </div>
 
         {/* Mobile Menu */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild className="md:hidden">
+          <SheetTrigger asChild className="lg:hidden">
             <Button
               variant="ghost"
               size="icon"
@@ -123,7 +144,7 @@ const Navigation = () => {
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[280px] bg-background border-l border-border">
+          <SheetContent side="right" className="w-[300px] bg-background border-l border-border">
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <div className="flex flex-col h-full">
               {/* Mobile Logo */}
@@ -139,33 +160,58 @@ const Navigation = () => {
               </div>
 
               {/* Mobile Nav Links */}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1">
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.href}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
                   >
-                    {link.isRoute ? (
-                      <Link
-                        to={link.href}
-                        onClick={() => setIsOpen(false)}
-                        className="block py-3 px-4 font-medium text-lg text-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-all"
-                      >
-                        {link.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={link.href}
-                        onClick={(e) => handleSmoothScroll(e, link.href)}
-                        className="block py-3 px-4 font-medium text-lg text-foreground hover:text-primary hover:bg-muted/50 rounded-lg transition-all"
-                      >
-                        {link.label}
-                      </a>
-                    )}
+                    <Link
+                      to={link.isRoute ? link.href : "#"}
+                      onClick={(e) => handleNavClick(e, link.href, link.isRoute)}
+                      className={`flex items-center gap-3 py-3 px-4 font-medium text-base rounded-lg transition-all ${
+                        link.highlight
+                          ? "bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                          : "text-foreground hover:text-primary hover:bg-muted/50"
+                      } ${
+                        (link.isRoute && location.pathname === link.href) ||
+                        (!link.isRoute && isHomePage && location.hash === link.href)
+                          ? "text-primary bg-muted/30"
+                          : ""
+                      }`}
+                    >
+                      <link.icon className="w-5 h-5" />
+                      {link.label}
+                    </Link>
                   </motion.div>
                 ))}
+              </div>
+
+              {/* Quick Actions */}
+              <div className="mt-8 space-y-3">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-4">
+                  Quick Actions
+                </p>
+                <Link
+                  to="/register"
+                  onClick={() => setIsOpen(false)}
+                  className="block"
+                >
+                  <Button variant="hero" className="w-full">
+                    Register as Artist
+                  </Button>
+                </Link>
+                <Link
+                  to="/contact"
+                  onClick={() => setIsOpen(false)}
+                  className="block"
+                >
+                  <Button variant="outline" className="w-full">
+                    Get in Touch
+                  </Button>
+                </Link>
               </div>
 
               {/* Decorative element */}
@@ -175,6 +221,9 @@ const Navigation = () => {
                   <span className="text-secondary text-xl">✦</span>
                   <span className="h-px w-12 bg-secondary/40" />
                 </div>
+                <p className="text-center text-xs text-muted-foreground mt-4">
+                  Celebrating India's Cultural Heritage
+                </p>
               </div>
             </div>
           </SheetContent>
