@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { motion } from "framer-motion";
 import { Menu, Home, Info, PartyPopper, Heart, Users, UserPlus, Mail } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -233,4 +233,4 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
+export default memo(Navigation);

@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef, forwardRef, useMemo } from "react";
+import { useRef, forwardRef, useMemo, memo } from "react";
 import { Link } from "react-router-dom";
 import { Instagram, Mail } from "lucide-react";
 
@@ -158,4 +158,4 @@ const Footer = forwardRef<HTMLElement, object>((_props, _ref) => {
 
 Footer.displayName = "Footer";
 
-export default Footer;
+export default memo(Footer);

@@ -1,7 +1,6 @@
-/* Optimized font loading with font-display: swap for faster text rendering */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600&display=swap');
+/* Fonts are loaded via index.html with preload for faster rendering */
+/* Fallback font-display: swap ensures text remains visible during load */
 
-/* Preload critical fonts */
 @font-face {
   font-family: 'Playfair Display';
   font-display: swap;
@@ -150,9 +149,19 @@
     height: auto;
   }
 
-  /* Ensure sections don't cause horizontal overflow */
+  /* Ensure sections don't cause horizontal overflow and optimize rendering */
   section {
     max-width: 100vw;
+    contain: layout style;
+  }
+
+  /* Optimize layout containment for heavy components */
+  .contain-paint {
+    contain: paint;
+  }
+
+  .contain-layout {
+    contain: layout;
   }
 }
 
