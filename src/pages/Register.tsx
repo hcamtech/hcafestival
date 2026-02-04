@@ -24,6 +24,10 @@ const artForms = [
   { value: "instrumental", label: "Instrumental", icon: Music },
   { value: "vocal", label: "Vocal Performance", icon: Mic2 },
   { value: "theater", label: "Theater/Drama", icon: Users2 },
+  { value: "nukkad_natak", label: "Nukkad Natak", icon: Users2 },
+  { value: "open_mic", label: "Open Mic", icon: Mic2 },
+  { value: "band", label: "Band", icon: Music },
+  { value: "divyang_special_child", label: "Divyang or Special Child", icon: Users2 },
   { value: "other", label: "Other", icon: Brush },
 ];
 
@@ -39,12 +43,21 @@ const registrationSchema = z.object({
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
   phone: z.string().trim().max(20, "Phone number must be less than 20 characters").optional(),
   art_form: z.string().min(1, "Please select an art form"),
+  other_art_form: z.string().trim().max(100, "Art form must be less than 100 characters").optional(),
   experience_level: z.enum(["beginner", "intermediate", "advanced", "professional"], {
     required_error: "Please select your experience level",
   }),
   group_size: z.number().min(1, "Group size must be at least 1").max(50, "Group size cannot exceed 50"),
   group_name: z.string().trim().max(100, "Group name must be less than 100 characters").optional(),
   description: z.string().trim().max(1000, "Description must be less than 1000 characters").optional(),
+}).refine((data) => {
+  if (data.art_form === "other" && (!data.other_art_form || data.other_art_form.trim() === "")) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Please specify your art form",
+  path: ["other_art_form"],
 });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
@@ -72,12 +85,15 @@ const Register = () => {
       email: "",
       phone: "",
       art_form: "",
+      other_art_form: "",
       experience_level: undefined,
       group_size: 1,
       group_name: "",
       description: "",
     },
   });
+
+  const selectedArtForm = form.watch("art_form");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -137,11 +153,15 @@ const Register = () => {
         portfolioUrls = await uploadFiles();
       }
 
+      const finalArtForm = data.art_form === "other" && data.other_art_form 
+        ? `Other: ${data.other_art_form}` 
+        : data.art_form;
+
       const { error } = await supabase.from("artist_registrations").insert({
         name: data.name,
         email: data.email,
         phone: data.phone || null,
-        art_form: data.art_form,
+        art_form: finalArtForm,
         experience_level: data.experience_level,
         group_size: data.group_size,
         group_name: data.group_name || null,
@@ -304,6 +324,22 @@ const Register = () => {
                           </FormItem>
                         )}
                       />
+
+                      {selectedArtForm === "other" && (
+                        <FormField
+                          control={form.control}
+                          name="other_art_form"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Specify Your Art Form *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Enter your art form (e.g., Puppetry, Mime, etc.)" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
 
                       <FormField
                         control={form.control}
