@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { useRef, forwardRef, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Youtube, Mail } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 
 const Footer = forwardRef<HTMLElement, object>((_props, _ref) => {
   const currentYear = new Date().getFullYear();
@@ -121,10 +121,7 @@ const Footer = forwardRef<HTMLElement, object>((_props, _ref) => {
             className="flex justify-center gap-4 mb-12"
           >
             {[
-              { icon: Facebook, label: "Facebook", href: "#" },
               { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/hcafestival_" },
-              { icon: Twitter, label: "Twitter", href: "#" },
-              { icon: Youtube, label: "YouTube", href: "#" },
               { icon: Mail, label: "Email", href: "mailto:contact@hindustaniculturalarts.com" },
             ].map((social) => (
               <a

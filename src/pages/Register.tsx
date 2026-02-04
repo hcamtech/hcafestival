@@ -99,14 +99,14 @@ const Register = () => {
     const files = Array.from(e.target.files || []);
     const validFiles = files.filter((file) => {
       const isValidType = ["image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4"].includes(file.type);
-      const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB
+      const isValidSize = file.size <= 50 * 1024 * 1024; // 50MB
       return isValidType && isValidSize;
     });
 
     if (validFiles.length !== files.length) {
       toast({
         title: "Some files were rejected",
-        description: "Only images, PDFs, and MP4 videos under 10MB are allowed.",
+        description: "Only images, PDFs, and MP4 videos under 50MB are allowed.",
         variant: "destructive",
       });
     }

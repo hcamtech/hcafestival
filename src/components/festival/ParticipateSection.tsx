@@ -124,6 +124,28 @@ const ParticipateSection = () => {
             ))}
           </motion.div>
 
+          {/* Participation Perks */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mb-10"
+          >
+            <h3 className="text-lg font-heading font-semibold text-foreground mb-4">
+              Participation Perks
+            </h3>
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex items-center gap-2 px-4 py-2 bg-secondary/10 rounded-full border border-secondary/30">
+                <Sparkles className="w-4 h-4 text-secondary" />
+                <span className="text-foreground font-medium text-sm">Certificate of Participation</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-secondary/10 rounded-full border border-secondary/30">
+                <Sparkles className="w-4 h-4 text-secondary" />
+                <span className="text-foreground font-medium text-sm">Recognition & Support for Next Event</span>
+              </div>
+            </div>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
