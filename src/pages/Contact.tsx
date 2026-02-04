@@ -217,7 +217,7 @@ const Contact = () => {
                       Venue
                     </h3>
                     <p className="text-muted-foreground">
-                      Festival grounds to be announced
+                      F8X5+CRV, Budh Vihar Colony, Tajpur Pahari Village, Badarpur, New Delhi, Delhi 110044
                     </p>
                   </div>
                 </motion.div>
@@ -235,9 +235,9 @@ const Contact = () => {
                     <h3 className="font-heading font-semibold text-foreground mb-1">
                       Email
                     </h3>
-                    <p className="text-muted-foreground">
-                      info@hindustanifestival.com
-                    </p>
+                    <a href="mailto:contact@hindustaniculturalarts.com" className="text-muted-foreground hover:text-foreground transition-colors">
+                      contact@hindustaniculturalarts.com
+                    </a>
                   </div>
                 </motion.div>
 
@@ -254,7 +254,9 @@ const Contact = () => {
                     <h3 className="font-heading font-semibold text-foreground mb-1">
                       Phone
                     </h3>
-                    <p className="text-muted-foreground">+91 XXXXX XXXXX</p>
+                    <a href="tel:+919667188668" className="text-muted-foreground hover:text-foreground transition-colors">
+                      +91 96671 88668
+                    </a>
                   </div>
                 </motion.div>
               </div>

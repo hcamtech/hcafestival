@@ -121,15 +121,17 @@ const Footer = forwardRef<HTMLElement, object>((_props, _ref) => {
             className="flex justify-center gap-4 mb-12"
           >
             {[
-              { icon: Facebook, label: "Facebook" },
-              { icon: Instagram, label: "Instagram" },
-              { icon: Twitter, label: "Twitter" },
-              { icon: Youtube, label: "YouTube" },
-              { icon: Mail, label: "Email" },
+              { icon: Facebook, label: "Facebook", href: "#" },
+              { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/hcafestival_" },
+              { icon: Twitter, label: "Twitter", href: "#" },
+              { icon: Youtube, label: "YouTube", href: "#" },
+              { icon: Mail, label: "Email", href: "mailto:contact@hindustaniculturalarts.com" },
             ].map((social) => (
               <a
                 key={social.label}
-                href="#"
+                href={social.href}
+                target={social.href.startsWith("http") ? "_blank" : undefined}
+                rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 aria-label={social.label}
                 className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-primary-foreground/20 flex items-center justify-center transition-colors"
               >
