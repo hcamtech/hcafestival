@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, memo } from "react";
 import { Button } from "@/components/ui/button";
 import festivalLogo from "@/assets/festival-logo.png";
 
@@ -184,4 +184,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default memo(HeroSection);
