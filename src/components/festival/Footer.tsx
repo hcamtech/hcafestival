@@ -86,24 +86,24 @@ const Footer = forwardRef<HTMLElement, object>((_props, _ref) => {
             transition={{ delay: 0.2 }}
             className="flex flex-wrap justify-center gap-8 mb-12"
           >
-            <a
-              href="/#about"
+            <Link
+              to="/about"
               className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               About
-            </a>
-            <a
-              href="/#celebration"
+            </Link>
+            <Link
+              to="/celebration"
               className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               Experience
-            </a>
-            <a
-              href="/#participate"
+            </Link>
+            <Link
+              to="/participate"
               className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
             >
               Participate
-            </a>
+            </Link>
             <Link
               to="/contact"
               className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"

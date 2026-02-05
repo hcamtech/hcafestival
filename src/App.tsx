@@ -7,6 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Lazy load pages for code splitting
 const Index = lazy(() => import("@/pages/Index"));
+const About = lazy(() => import("@/pages/About"));
+const Celebration = lazy(() => import("@/pages/Celebration"));
+const Inclusivity = lazy(() => import("@/pages/Inclusivity"));
+const Participate = lazy(() => import("@/pages/Participate"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const Register = lazy(() => import("@/pages/Register"));
 const Admin = lazy(() => import("@/pages/Admin"));
@@ -31,6 +35,10 @@ const App = () => (
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/celebration" element={<Celebration />} />
+            <Route path="/inclusivity" element={<Inclusivity />} />
+            <Route path="/participate" element={<Participate />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<Admin />} />
