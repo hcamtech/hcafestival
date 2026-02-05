@@ -167,7 +167,7 @@ const HeroSection = () => {
       {/* Scroll indicator - skip animation if reduced motion */}
       {!prefersReducedMotion && (
         <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+          className="hidden md:block absolute bottom-8 left-1/2 transform -translate-x-1/2"
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
         >
