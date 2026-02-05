@@ -8,10 +8,10 @@ import festivalLogo from "@/assets/festival-logo.png";
 
 const navLinks = [
   { href: "/", label: "Home", icon: Home, isRoute: true },
-  { href: "#about", label: "About", icon: Info },
-  { href: "#celebration", label: "Celebration", icon: PartyPopper },
-  { href: "#inclusivity", label: "Inclusivity", icon: Heart },
-  { href: "#participate", label: "Participate", icon: Users },
+  { href: "/about", label: "About", icon: Info, isRoute: true },
+  { href: "/celebration", label: "Celebration", icon: PartyPopper, isRoute: true },
+  { href: "/inclusivity", label: "Inclusivity", icon: Heart, isRoute: true },
+  { href: "/participate", label: "Participate", icon: Users, isRoute: true },
   { href: "/register", label: "Register", icon: UserPlus, isRoute: true, highlight: true },
   { href: "/contact", label: "Contact", icon: Mail, isRoute: true },
 ];
