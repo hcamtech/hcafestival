@@ -70,16 +70,27 @@ const Navigation = () => {
   // Handle hash navigation after page load
   useEffect(() => {
     if (location.hash) {
-      setTimeout(() => {
+      const scrollToHash = () => {
         const targetId = location.hash.replace("#", "");
         const element = document.getElementById(targetId);
         if (element) {
           const offsetTop = element.offsetTop - 80;
           window.scrollTo({ top: offsetTop, behavior: "smooth" });
+          return true;
         }
-      }, 100);
+        return false;
+      };
+
+      // Retry multiple times for lazy-loaded pages
+      let attempts = 0;
+      const maxAttempts = 10;
+      const interval = setInterval(() => {
+        if (scrollToHash() || ++attempts >= maxAttempts) {
+          clearInterval(interval);
+        }
+      }, 200);
     }
-  }, [location.hash]);
+  }, [location.hash, location.pathname]);
 
   return (
     <motion.header
