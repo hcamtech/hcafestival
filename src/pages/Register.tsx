@@ -97,21 +97,24 @@ const Register = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const validFiles = files.filter((file) => {
-      const isValidType = ["image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4"].includes(file.type);
-      const isValidSize = file.size <= 50 * 1024 * 1024; // 50MB
-      return isValidType && isValidSize;
-    });
+    if (files.length === 0) return;
 
-    if (validFiles.length !== files.length) {
+    const file = files[0];
+    const isValidType = ["image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4"].includes(file.type);
+    const isValidSize = file.size <= 50 * 1024 * 1024; // 50MB
+
+    if (!isValidType || !isValidSize) {
       toast({
-        title: "Some files were rejected",
-        description: "Only images, PDFs, and MP4 videos under 50MB are allowed.",
+        title: "File rejected",
+        description: !isValidType 
+          ? "Only images, PDFs, and MP4 videos are allowed." 
+          : "File must be under 50MB.",
         variant: "destructive",
       });
+      return;
     }
 
-    setUploadedFiles((prev) => [...prev, ...validFiles].slice(0, 5)); // Max 5 files
+    setUploadedFiles([file]);
   };
 
   const removeFile = (index: number) => {
@@ -433,7 +436,6 @@ const Register = () => {
                         <input
                           type="file"
                           id="portfolio"
-                          multiple
                           accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4"
                           onChange={handleFileChange}
                           className="hidden"
@@ -441,10 +443,10 @@ const Register = () => {
                         <label htmlFor="portfolio" className="cursor-pointer">
                           <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
                           <p className="text-sm text-muted-foreground">
-                            Click to upload images, PDFs, or videos
+                            Click to upload an image, PDF, or video
                           </p>
                           <p className="text-xs text-muted-foreground mt-1">
-                            Max 5 files, 10MB each (JPG, PNG, WebP, PDF, MP4)
+                            1 file, up to 50MB (JPG, PNG, WebP, PDF, MP4)
                           </p>
                         </label>
                       </div>
