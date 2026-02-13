@@ -150,29 +150,29 @@ const Register = () => {
     setUploadProgress(0);
 
     try {
-      let portfolioUrls: string[] = [];
-
-      if (uploadedFiles.length > 0) {
-        portfolioUrls = await uploadFiles();
-      }
-
       const finalArtForm = data.art_form === "other" && data.other_art_form 
         ? `Other: ${data.other_art_form}` 
         : data.art_form;
 
-      const { error } = await supabase.from("artist_registrations").insert({
-        name: data.name,
-        email: data.email,
-        phone: data.phone || null,
-        art_form: finalArtForm,
-        experience_level: data.experience_level,
-        group_size: data.group_size,
-        group_name: data.group_name || null,
-        description: data.description || null,
-        portfolio_urls: portfolioUrls,
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      if (data.phone) formData.append("phone", data.phone);
+      formData.append("art_form", finalArtForm);
+      formData.append("experience_level", data.experience_level);
+      formData.append("group_size", String(data.group_size));
+      if (data.group_name) formData.append("group_name", data.group_name);
+      if (data.description) formData.append("description", data.description);
+      if (uploadedFiles.length > 0) {
+        formData.append("portfolio_file", uploadedFiles[0]);
+      }
+
+      const response = await fetch("https://hook.eu1.make.com/dmirxg6b2pchso421j6irfkkrwymoi8g", {
+        method: "POST",
+        body: formData,
       });
 
-      if (error) throw error;
+      if (!response.ok) throw new Error("Webhook request failed");
 
       toast({
         title: "Registration Submitted!",
