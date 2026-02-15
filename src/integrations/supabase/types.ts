@@ -27,6 +27,7 @@ export type Database = {
           name: string
           phone: string | null
           portfolio_urls: string[] | null
+          video_link: string | null
         }
         Insert: {
           art_form: string
@@ -40,6 +41,7 @@ export type Database = {
           name: string
           phone?: string | null
           portfolio_urls?: string[] | null
+          video_link?: string | null
         }
         Update: {
           art_form?: string
@@ -53,6 +55,7 @@ export type Database = {
           name?: string
           phone?: string | null
           portfolio_urls?: string[] | null
+          video_link?: string | null
         }
         Relationships: []
       }

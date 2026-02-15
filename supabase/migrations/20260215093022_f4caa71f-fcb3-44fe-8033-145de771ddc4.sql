@@ -1,0 +1,1 @@
+ALTER TABLE public.artist_registrations ADD COLUMN video_link text;
