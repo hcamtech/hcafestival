@@ -175,6 +175,7 @@ const Admin = () => {
       "group_size",
       "description",
       "portfolio_urls",
+      "video_link",
     ];
     exportToCSV(artistRegistrations, "artist_registrations", headers);
   };
@@ -387,6 +388,7 @@ const Admin = () => {
                             <TableHead>Experience</TableHead>
                             <TableHead>Group</TableHead>
                             <TableHead>Portfolio</TableHead>
+                            <TableHead>Video Link</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -455,6 +457,21 @@ const Admin = () => {
                                       </a>
                                     ))}
                                   </div>
+                                ) : (
+                                  <span className="text-muted-foreground text-sm">None</span>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {registration.video_link ? (
+                                  <a
+                                    href={registration.video_link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                    Watch
+                                  </a>
                                 ) : (
                                   <span className="text-muted-foreground text-sm">None</span>
                                 )}
