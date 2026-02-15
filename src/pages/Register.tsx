@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload, X, Music, Brush, Mic2, Users2 } from "lucide-react";
+import { Upload, X, Music, Brush, Mic2, Users2, Link2 } from "lucide-react";
 
 const artForms = [
   { value: "classical_music", label: "Classical Music", icon: Music },
@@ -50,6 +50,7 @@ const registrationSchema = z.object({
   group_size: z.number().min(1, "Group size must be at least 1").max(50, "Group size cannot exceed 50"),
   group_name: z.string().trim().max(100, "Group name must be less than 100 characters").optional(),
   description: z.string().trim().max(1000, "Description must be less than 1000 characters").optional(),
+  video_link: z.string().trim().max(500, "URL must be less than 500 characters").optional().or(z.literal("")),
 }).refine((data) => {
   if (data.art_form === "other" && (!data.other_art_form || data.other_art_form.trim() === "")) {
     return false;
@@ -90,6 +91,7 @@ const Register = () => {
       group_size: 1,
       group_name: "",
       description: "",
+      video_link: "",
     },
   });
 
@@ -100,15 +102,15 @@ const Register = () => {
     if (files.length === 0) return;
 
     const file = files[0];
-    const isValidType = ["image/jpeg", "image/png", "image/webp", "application/pdf", "video/mp4"].includes(file.type);
-    const isValidSize = file.size <= 50 * 1024 * 1024; // 50MB
+    const isValidType = ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+    const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB
 
     if (!isValidType || !isValidSize) {
       toast({
         title: "File rejected",
         description: !isValidType 
-          ? "Only images, PDFs, and MP4 videos are allowed." 
-          : "File must be under 50MB.",
+          ? "Only photograph images (JPG, PNG, WebP) are allowed." 
+          : "File must be under 5MB.",
         variant: "destructive",
       });
       return;
@@ -170,6 +172,7 @@ const Register = () => {
         group_name: data.group_name || null,
         description: data.description || null,
         portfolio_urls: portfolioUrls,
+        video_link: data.video_link || null,
       });
 
       if (error) throw error;
@@ -426,27 +429,54 @@ const Register = () => {
                       />
                     </div>
 
-                    {/* Portfolio Upload */}
+                    {/* Video Link */}
                     <div className="space-y-4">
                       <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                        Portfolio Samples
+                        Video Link
+                      </h3>
+
+                      <FormField
+                        control={form.control}
+                        name="video_link"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Performance Video URL</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Input placeholder="Google Drive, Dropbox, or YouTube link" className="pl-10" {...field} />
+                              </div>
+                            </FormControl>
+                            <FormDescription>
+                              Share a link to your performance video (Google Drive, Dropbox, or YouTube)
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Photograph Upload */}
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                        Your Photograph
                       </h3>
 
                       <div className="border-2 border-dashed border-border/50 rounded-lg p-6 text-center">
                         <input
                           type="file"
                           id="portfolio"
-                          accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4"
+                          accept="image/jpeg,image/png,image/webp"
                           onChange={handleFileChange}
                           className="hidden"
                         />
                         <label htmlFor="portfolio" className="cursor-pointer">
                           <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
                           <p className="text-sm text-muted-foreground">
-                            Click to upload an image, PDF, or video
+                            Click to upload your photograph
                           </p>
                           <p className="text-xs text-muted-foreground mt-1">
-                            1 file, up to 50MB (JPG, PNG, WebP, PDF, MP4)
+                            1 file, up to 5MB (JPG, PNG, WebP)
                           </p>
                         </label>
                       </div>
